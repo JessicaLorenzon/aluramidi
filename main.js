@@ -1,57 +1,36 @@
-function tocaSom(seletorAudio) {
-    const elemento = document.querySelector(seletorAudio);
+const botao = document.querySelectorAll(".tecla");
 
-    if (elemento && elemento.localName === 'audio') {
-        elemento.play();
-    } else {
-        console.log('Elemento não encontrado ou seletor inválido.');
-    }
-    
-}
+botao.forEach((elemento) => {
+    elemento.addEventListener("click", (evento) => {
+        elemento.classList.add("ativa");
 
-const listaDeTeclas = document.querySelectorAll('.tecla');
+        setTimeout(function () {
+            elemento.classList.remove("ativa");
+        }, 200);
 
-for (let contador = 0; contador < listaDeTeclas.length; contador++) {
+        tocarSom(evento.target.dataset.sound);
 
-    const tecla = listaDeTeclas[contador];
-    const instrumento = tecla.classList[1];
-    const idAudio = `#som_${instrumento}`; //template string
+    });
+});
 
-    tecla.onclick = function () {
-        tocaSom(idAudio);
-    }
+function tocarSom(som) {
+    const id = `#som_tecla_${som}`;
+    const idAudio = document.querySelector(id);
 
-    tecla.onkeydown = function (evento) {
-
-        if (evento.code === 'Space' || evento.code === 'Enter') {
-            tecla.classList.add('ativa');
-        }
-    }
-
-    tecla.onkeyup = function () {
-        tecla.classList.remove('ativa');
-    }
+    idAudio.pause();
+    idAudio.currentTime = 0;
+    idAudio.play();
 }
 
 
+document.addEventListener("keypress", (evento) => {
+    const keyName = evento.key;
 
+    const stringSeletor = `[data-key="${keyName}"]`;
+    const botao = document.querySelector(stringSeletor);
 
-/*
-let contador = 0;
-
-while (contador < listaDeTeclas.length) {
-
-    const tecla = listaDeTeclas[contador];
-    const instrumento = tecla.classList[1];
-    const idAudio = `#som_${instrumento}`; //template string
-
-    //console.log(idAudio);
-    
-    tecla.onclick = function() {
-        tocaSom(idAudio);
+    if (botao !== null) {
+        botao.click();
     }
-    contador = contador + 1;
 
-    //console.log(contador);
-}
-*/
+});
